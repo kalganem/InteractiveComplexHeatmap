@@ -7,7 +7,8 @@
 }
 #@{heatmap_id}_sub_heatmap_resize {
 	position: relative;
-	border: 1px solid grey;
+	border: 1px solid #ddd;
+	border-radius: .375rem;
 }
 #@{heatmap_id}_sub_heatmap {
 	display: block;

@@ -1637,7 +1637,7 @@ default_brush_action = function(input, output, session, heatmap_id,
 			HTML(paste(
 				  qq("<p>Selected over @{n_ht} heatmap@{ifelse(n_ht > 1, 's', '')} with @{nr} row@{ifelse(nr > 1, 's', '')} and @{nc} column@{ifelse(nc > 1, 's', '')}. Row and column indices can be obtained by copying following code:</p>"),
 				  "<div>",
-				  qq("<p><button id='@{heatmap_id}_show_code' class='btn btn-default'>show/hide code</button></p>"),
+				  qq("<p><button id='@{heatmap_id}_show_code' class='btn btn-primary'>show/hide code</button></p>"),
 				  qq("<div id='@{heatmap_id}_code_wrapper'>"),
 				  qq("<pre id='@{heatmap_id}_code'>"),
 				  dump_txt,
