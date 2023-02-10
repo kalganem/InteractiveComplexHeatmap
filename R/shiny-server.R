@@ -58,10 +58,8 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 	only_brush_output_response = !(has_brush_response) & "brush-output" %in% response
 
 	if(inherits(ht_list, "Heatmap")) {
-		message(qq("[@{Sys.time()}] The heatmap is suggested to be updated by e.g. `ht = draw(ht)` before sending to the Shiny app."))
 	} else if(inherits(ht_list, "HeatmapList")) {
 		if(!ht_list@layout$initialized) {
-			message(qq("[@{Sys.time()}] The heatmap list is suggested to be udpated by e.g. `ht_list = draw(ht_list)` before sending to the Shiny app."))
 		}
 	} else {
 		stop_wrap("`ht_list` can only be a Heatmap/HeatmapList object.")
@@ -164,9 +162,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 		}
 	}
 	if(length(shiny_env$obs[[heatmap_id]])) {
-		message(qq("[@{Sys.time()}] remove previous observeEvent for heatmap id: '@{heatmap_id}'."))
 		for(nm in names(shiny_env$obs[[heatmap_id]])) {
-			# message(qq("[@{Sys.time()}] remove previous observeEvent: '@{nm}'."))
 			shiny_env$obs[[heatmap_id]][[nm]]$destroy()
 		}
 	}
@@ -270,8 +266,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 			# 	warning_wrap(qq("Detect there is already an off-screen device opened: '@{names(dvl)[length(dvl)]}', please close it by dev.off() and reopen the application."))
 			# }
 
-	    	showNotification("Initialize the original heatmap.", duration = 2, type = "message")
-
 	    	ht_list = ht_list()
 	    	draw(ht_list)
 
@@ -284,7 +278,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 					HTML("<p>No position is selected.</p>")
 				})
 			}
-			message(qq("[@{Sys.time()}] initialize the original heatmap (ID: @{heatmap_id}) and calculate positions."))
 
 			lt = check_heatmap_in_search(heatmap_id, ht_list)
 
@@ -351,7 +344,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 			grid.newpage()
 			grid.text("No area on the heatmap is selected.", 0.5, 0.5, gp = gpar(fontsize = 14))
 
-			message(qq("[@{Sys.time()}] no area on the heatmap is selected, Do not make the sub-heatmap."))
 		}, res = res)
 
 		if(do_default_click_action || do_default_brush_action) {
@@ -373,15 +365,12 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 
 		output[[qq("@{heatmap_id}_heatmap")]] = renderPlot({
 
-			showNotification("Making the original heatmap.", duration = 2, type = "message")
-
 	    	draw(ht_list())
 
 			ht_pos( htPositionsOnDevice(ht_list(), include_annotation = TRUE, calibrate = FALSE) )
 			selected( NULL )
 			selected_copy( NULL )
 
-			message(qq("[@{Sys.time()}] make the original heatmap and calculate positions (device size: @{width}x@{height} px)."))
 			session$sendCustomMessage(qq("@{heatmap_id}_remove_brush"), "")
 		}, width = width, height = height, res = res)
 	})
@@ -401,9 +390,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 			format = as.numeric(input[[qq("@{heatmap_id}_heatmap_download_format")]])
 			fm = c("png", "pdf", "svg")[format]
 			dev = list(png, pdf, svglite::svglite)[[format]]
-
-			showNotification(qq("Download heatmap in @{fm}."), duration = 2, type = "message")
-			message(qq("[@{Sys.time()}] Download heatmap in @{fm}."))
 
 			temp = tempfile()
 			width = input[[qq("@{heatmap_id}_heatmap_download_image_width")]]
@@ -442,9 +428,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 	    	ht_pos( htPositionsOnDevice(ht_list(), include_annotation = TRUE, calibrate = FALSE) )
 			selected( NULL )
 			selected_copy( NULL )
-
-	    	showNotification(qq("Resizing the original heatmap (device size: @{width}x@{height} px)."), duration = 2, type = "message")
-	    	message(qq("[@{Sys.time()}] Resizing the original heatmap (device size: @{width}x@{height} px)."))
 
 	    	session$sendCustomMessage(qq("@{heatmap_id}_remove_brush"), "")
 	    }, width = width, height = height, res = res)
@@ -534,8 +517,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 				}
 			}
 
-			showNotification(qq("remove one @{ifelse(where %in% c('top', 'botton'), 'row', 'column')} from @{where} of sub-heatmap."), duration = 2, type = "message")
-	    	message(qq("[@{Sys.time()}] remove one @{ifelse(where %in% c('top', 'botton'), 'row', 'column')} from @{where} from sub-heatmap."))
 
 			session$sendCustomMessage(qq("@{heatmap_id}_sub_initialized"), "on")
 		})
@@ -573,9 +554,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 				}
 			}
 
-			showNotification(qq("remove empty rows and columns from sub-heatmap."), duration = 2, type = "message")
-	    	message(qq("[@{Sys.time()}] remove empty rows and columns from sub-heatmap."))
-
 			session$sendCustomMessage(qq("@{heatmap_id}_sub_initialized"), "on")
 		}, ignoreInit = TRUE)
 
@@ -608,9 +586,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 			}
 
 			updateCheckboxInput(session, qq("@{heatmap_id}_remove_empty_checkbox"), value = FALSE)
-
-			showNotification(qq("reset sub-heatmap."), duration = 2, type = "message")
-	    	message(qq("[@{Sys.time()}] reset sub-heatmap."))
 
 			session$sendCustomMessage(qq("@{heatmap_id}_sub_initialized"), "on")
 		})
@@ -679,8 +654,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 			})
 			all_ht_name = all_ht_name[!is.na(all_ht_name)]
 
-			message(qq("[@{Sys.time()}] search heatmap @{ifelse(where == 1, 'row', 'column')}s with @{ifelse(is_regexpr, 'regular expression', 'keywords')}: '@{keywords}'."))
-
 			if(!is_regexpr) {
 				keywords = gsub("^\\s+||\\s+$", "", keywords)
 				keywords = strsplit(keywords, "\\s*,\\s*")[[1]]
@@ -743,9 +716,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 				format = as.numeric(input[[qq("@{heatmap_id}_sub_heatmap_download_format")]])
 				fm = c("png", "pdf", "svg")[format]
 				dev = list(png, pdf, svglite::svglite)[[format]]
-
-				showNotification(qq("Download sub-heatmap in @{fm}."), duration = 2, type = "message")
-				message(qq("[@{Sys.time()}] Download sub-heatmap in @{fm}."))
 
 				temp = tempfile()
 				width = input[[qq("@{heatmap_id}_sub_heatmap_download_image_width")]]
@@ -816,9 +786,6 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 					size = "l"
 				))
 			}
-
-			showNotification(qq("Open selected sub-heatmap as a text table."), duration = 2, type = "message")
-	    	message(qq("[@{Sys.time()}] open selected sub-heatmap as a text table."))
 
 		})
 
@@ -1029,7 +996,6 @@ getPositionFromDblclick = function(dblclick, ratio = 1) {
 
 make_sub_heatmap = function(input, output, session, heatmap_id, update_size = TRUE, 
 	selected = NULL, ht_list = NULL, ...) {
-	showNotification("Making the selected sub-heatmap.", duration = 2, type = "message")
 
 	shiny_env$is_in_sub_heatmap = TRUE
 	on.exit(shiny_env$is_in_sub_heatmap <- FALSE)
@@ -1345,7 +1311,6 @@ make_sub_heatmap = function(input, output, session, heatmap_id, update_size = TR
 			}
 		}
 	    ht_select = draw(ht_select, save_last = FALSE, ...)
-	    message(qq("[@{Sys.time()}] make the sub-heatmap (device size: @{width}x@{height} px)."))
 	}
 
 	if(update_size) {
@@ -1696,7 +1661,6 @@ default_click_action = function(input, output, session, heatmap_id, selected = N
 	    if(is.null(selected)) {
 	    	HTML("<p>No cell is selected.</p>")
 	    } else {
-	    	showNotification(qq("@{action} on the heatmap."), duration = 2, type = "message")
 	    	pos = selected
 
 			if(is.null(pos)) {
@@ -1752,8 +1716,6 @@ default_click_action = function(input, output, session, heatmap_id, selected = N
 			    	# column_label = paste0("'", column_label, "'")
 			    }
 
-			    message(qq("[@{Sys.time()}] @{action} on the heatmap @{slice_name}."))
-				
 				html = qq("
 <div>
 <p>Information of the @{action}ed cell:</p>
