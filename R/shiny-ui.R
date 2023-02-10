@@ -454,6 +454,30 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 						),
 						p("Search Heatmap", style = "display:none;")
 					),
+					tabPanel(HTML("<i class='fa fa-brush'></i>"),
+					         div(
+					           id = qq('@{heatmap_id}_tabs-brush'),
+					           HTML(qq('
+								<div class="form-group shiny-input-container" style="float:left; width:120px;">
+								<label>Brush border</label>
+								<div id="@{heatmap_id}_color_pickers_border"></div>
+								</div>
+								<div class="form-group shiny-input-container" style="float:left; width:120px;">
+								<label>Brush fill</label>
+								<div id="@{heatmap_id}_color_pickers_fill"></div>
+								</div>
+								<div style="clear:both;"></div>')
+					           ),
+					           selectizeInput(qq("@{heatmap_id}_color_pickers_border_width"), label = "Border width", 
+					                          choices = list("1px" = 1, "2px" = 2, "3px" = 3), selected = 1,
+					                          options = list(render = I("{
+										option: function(item, escape) {
+											return '<div><hr style=\"border-top:' + item.value + 'px solid black;\"></div>'
+										}
+									}"))),
+					           sliderInput(qq("@{heatmap_id}_color_pickers_opacity"), label = "Opacity", min = 0, max = 1, value = pickr_opacity)
+					         )
+					),
 					tabPanel(HTML("<i class='fa fa-images'></i>"),
 						div(
 							id = qq('@{heatmap_id}_tabs-save-image'),
