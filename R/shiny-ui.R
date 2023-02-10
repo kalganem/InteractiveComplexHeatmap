@@ -450,7 +450,7 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 							radioButtons(qq("@{heatmap_id}_search_where"), label = "Which dimension to search?", choices = list("on rows" = 1, "on columns" = 2), selected = 1, inline = TRUE),
 							checkboxGroupInput(qq("@{heatmap_id}_search_heatmaps"), label = "Which heatmaps to search?", choiceNames = "loading", choiceValues = "", selected = ""),
 							checkboxGroupInput(qq("@{heatmap_id}_search_extend"), label = "Extend sub-heatmap to all heatmaps and annotations?", choiceNames = "yes", choiceValues = 1, selected = NULL),
-							actionButton(qq("@{heatmap_id}_search_action"), label = "Search")
+							actionButton(qq("@{heatmap_id}_search_action"), label = "Search", class = "btn btn-primary")
 						),
 						p("Search Heatmap", style = "display:none;")
 					),
@@ -484,14 +484,7 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 							radioButtons(qq("@{heatmap_id}_heatmap_download_format"), label = "Which format?", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE),
 							numericInput(qq("@{heatmap_id}_heatmap_download_image_width"), label = "Image width (in px)", value = 0),
 							numericInput(qq("@{heatmap_id}_heatmap_download_image_height"), label = "Image height (in px)", value = 0),
-							downloadButton(qq("@{heatmap_id}_heatmap_download_button"), "Save image")
-						)
-					),
-					tabPanel(HTML("<i class='fa fa-expand-arrows-alt'></i>"),
-						div(id = qq('@{heatmap_id}_tabs-resize'),
-							numericInput(qq("@{heatmap_id}_heatmap_input_width"), "Box width", 0),
-							numericInput(qq("@{heatmap_id}_heatmap_input_height"), "Box height", 0),
-							actionButton(qq("@{heatmap_id}_heatmap_input_size_button"), "Change image size")
+							downloadButton(qq("@{heatmap_id}_heatmap_download_button"), "Save image", class = "btn btn-primary")
 						)
 					)
 				)
@@ -599,8 +592,8 @@ subHeatmapOutput = function(heatmap_id, title = NULL,
 						<option value="right">right</option></select>
 						</p>
 							')),
-							actionButton(qq("@{heatmap_id}_post_remove_submit"), "Remove"),
-							actionButton(qq("@{heatmap_id}_post_remove_reset"), "Reset"),
+							actionButton(qq("@{heatmap_id}_post_remove_submit"), "Remove", class = "btn btn-error"),
+							actionButton(qq("@{heatmap_id}_post_remove_reset"), "Reset", class = "btn btn-primary"),
 							tags$script(HTML(qq("
 								$('#@{heatmap_id}_post_remove_dimension').change(function() {
 									if($(this).val() == 1 || $(this).val() == 2) {
@@ -613,13 +606,13 @@ subHeatmapOutput = function(heatmap_id, title = NULL,
 						),
 						hr(),
 						p("Click the button below to turn the sub-heatmap into an interactive app.", style = "max-width:300px;"),
-						actionButton(qq("@{heatmap_id}_open_modal"), label = "Interactivate sub-heatmap")
+						actionButton(qq("@{heatmap_id}_open_modal"), label = "Interactivate sub-heatmap", class = "btn btn-primary")
 					)
 				),
 				tabPanel(HTML("<i class='fa fa-table'></i>"),
 					div(id = qq("@{heatmap_id}_sub_tabs-table"),
 						p("Export values in sub-heatmaps as a text table."),
-						actionButton(qq("@{heatmap_id}_open_table"), label = "Open table")
+						actionButton(qq("@{heatmap_id}_open_table"), label = "Open table", class = "btn btn-primary")
 					)
 				),
 				tabPanel(HTML("<i class='fa fa-images'></i>"),
@@ -627,15 +620,8 @@ subHeatmapOutput = function(heatmap_id, title = NULL,
 						radioButtons(qq("@{heatmap_id}_sub_heatmap_download_format"), label = "Which format?", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE),
 						numericInput(qq("@{heatmap_id}_sub_heatmap_download_image_width"), label = "Image width (in px)", value = 0),
 						numericInput(qq("@{heatmap_id}_sub_heatmap_download_image_height"), label = "Image height (in px)", value = 0),
-						downloadButton(qq("@{heatmap_id}_sub_heatmap_download_button"), "Save image")
+						downloadButton(qq("@{heatmap_id}_sub_heatmap_download_button"), "Save image", class = "btn btn-primary")
 					),
-				),
-				tabPanel(HTML("<i class='fa fa-expand-arrows-alt'></i>"),
-					div(id = qq('@{heatmap_id}_sub_tabs-resize'),
-						numericInput(qq("@{heatmap_id}_sub_heatmap_input_width"), "Box width", 0),
-						numericInput(qq("@{heatmap_id}_sub_heatmap_input_height"), "Box height", 0),
-						actionButton(qq("@{heatmap_id}_sub_heatmap_input_size_button"), "Change image size")
-					)
 				)
 			),
 			tags$script(HTML(qq("
