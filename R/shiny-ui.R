@@ -592,7 +592,7 @@ subHeatmapOutput = function(heatmap_id, title = NULL,
 						<option value="right">right</option></select>
 						</p>
 							')),
-							actionButton(qq("@{heatmap_id}_post_remove_submit"), "Remove", class = "btn btn-error"),
+							actionButton(qq("@{heatmap_id}_post_remove_submit"), "Remove", class = "btn btn-danger"),
 							actionButton(qq("@{heatmap_id}_post_remove_reset"), "Reset", class = "btn btn-primary"),
 							tags$script(HTML(qq("
 								$('#@{heatmap_id}_post_remove_dimension').change(function() {
