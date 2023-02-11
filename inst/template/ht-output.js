@@ -19,7 +19,7 @@ $(function() {
 		}
 		if('@{action}' == "click") {
 	    	$('#@{heatmap_id}_heatmap').click(function(e) {
-		    	$('#@{heatmap_id}_output_wrapper').css({'position':'absolute', 'left':e.pageX, 'right':'auto', 'top':e.pageY});
+		    	$('#@{heatmap_id}_output_wrapper').css({'position':'absolute', 'left':e.pageX+5, 'right':'auto', 'top':e.pageY+5});
 		    	
 		    });
 		}
