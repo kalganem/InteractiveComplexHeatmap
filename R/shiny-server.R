@@ -1587,72 +1587,69 @@ default_brush_action = function(input, output, session, heatmap_id,
 	default_text = "Selected area should overlap to heatmap bodies.",
 	selected = NULL, ht_list = NULL) {
 
-	output[[qq("@{heatmap_id}_info")]] = renderUI({
-
-		if(is.null(selected)) {
-			HTML(qq("<p>@{default_text}</p>"))
-		} else {
-
-			selected = selected[!is.na(selected$row_slice), ]
-
-			n_ht = length(unique(selected$heatmap))
-
-			if(ht_list@direction == "horizontal") {
-				l1 = !duplicated(selected$row_slice)
-				nr = length(unlist(selected$row_index[l1]))
-
-				l2 = !duplicated(paste0(selected$heatmap, selected$column_slice))
-				nc = length(unlist(selected$column_index[l2]))
-			} else {
-				l1 = !duplicated(paste0(selected$heatmap, selected$row_slice))
-				nr = length(unlist(selected$row_index[l1]))
-
-				l2 = !duplicated(selected$column_slice)
-				nc = length(unlist(selected$column_index[l2]))
-			}
-
-			selected_df = as.data.frame(selected)
-
-			# con = textConnection("dump_txt", "w")
-			# dump("selected_df", file = con)
-			# close(con)
-			# dump_txt = dump_txt[-1]
-			# dump_txt = paste(dump_txt, collapse = "\n")
-
-			json_list = sapply(1:nrow(selected_df), function(i) toJSON(selected_df[i, ]))
-			json_list = lapply(json_list, function(x) {
-				x = gsub("^\\[|]$", "", x)
-				x =  gsub('"slice":', '\n  "slice":', x)
-				x =  gsub('"row_slice":', '\n  "row_slice":', x)
-				x =  gsub('"column_slice":', '\n  "column_slice":', x)
-				x =  gsub('"row_index":', '\n  "row_index":', x)
-				x =  gsub('"column_index":', '\n  "column_index":', x)
-				x
-			})
-			json_txt = paste0("[", paste(json_list, collapse = ",\n"), "]")
-			json_txt = gsub("^(.)", "  \\1", json_txt)
-			json_txt = gsub("\n", "\n  ", json_txt)
-			dump_txt = qq("jsonlite::fromJSON('\n@{json_txt}\n')")
-
-			HTML(paste(
-				  qq("<p>Selected over @{n_ht} heatmap@{ifelse(n_ht > 1, 's', '')} with @{nr} row@{ifelse(nr > 1, 's', '')} and @{nc} column@{ifelse(nc > 1, 's', '')}. Row and column indices can be obtained by copying following code:</p>"),
-				  "<div>",
-				  qq("<p><button id='@{heatmap_id}_show_code' class='btn btn-primary'>show/hide code</button></p>"),
-				  qq("<div id='@{heatmap_id}_code_wrapper'>"),
-				  qq("<pre id='@{heatmap_id}_code'>"),
-				  dump_txt,
-				  "</pre>",
-				  "</div>",
-				  "</div>",
-				  "<script>",
-				  qq("$('#@{heatmap_id}_code_wrapper').hide();"),
-				  qq("$('#@{heatmap_id}_show_code').click(function(){ $('#@{heatmap_id}_code_wrapper').toggle(); });"),
-				  qq("create_clipboard('@{heatmap_id}_code');"),
-				  "</script>",
-				  
-				  sep = "\n"))
-		}
-	})
+  output[[qq("@{heatmap_id}_info")]] = renderUI({
+    
+    if(is.null(selected)) {
+      HTML(qq("<p>@{default_text}</p>"))
+    } else {
+      
+      selected = selected[!is.na(selected$row_slice), ]
+      
+      n_ht = length(unique(selected$heatmap))
+      
+      if(ht_list@direction == "horizontal") {
+        l1 = !duplicated(selected$row_slice)
+        nr = length(unlist(selected$row_index[l1]))
+        
+        l2 = !duplicated(paste0(selected$heatmap, selected$column_slice))
+        nc = length(unlist(selected$column_index[l2]))
+      } else {
+        l1 = !duplicated(paste0(selected$heatmap, selected$row_slice))
+        nr = length(unlist(selected$row_index[l1]))
+        
+        l2 = !duplicated(selected$column_slice)
+        nc = length(unlist(selected$column_index[l2]))
+      }
+      
+      selected_df = as.data.frame(selected)
+      
+      json_list = sapply(1:nrow(selected_df), function(i) toJSON(selected_df[i, ]))
+      json_list = lapply(json_list, function(x) {
+        x = gsub("^\\[|]$", "", x)
+        x =  gsub('"slice":', '\n  "slice":', x)
+        x =  gsub('"row_slice":', '\n  "row_slice":', x)
+        x =  gsub('"column_slice":', '\n  "column_slice":', x)
+        x =  gsub('"row_index":', '\n  "row_index":', x)
+        x =  gsub('"column_index":', '\n  "column_index":', x)
+        x
+      })
+      json_txt = paste0("[", paste(json_list, collapse = ",\n"), "]")
+      json_txt = gsub("^(.)", "  \\1", json_txt)
+      json_txt = gsub("\n", "\n  ", json_txt)
+      dump_txt = qq("jsonlite::fromJSON('\n@{json_txt}\n')")
+      
+      HTML(paste(
+        qq("<p>Selected over @{n_ht} heatmap@{ifelse(n_ht > 1, 's', '')} with @{nr} row@{ifelse(nr > 1, 's', '')} and @{nc} column@{ifelse(nc > 1, 's', '')}. Row and column indices can be obtained by copying following code:</p>"),
+        "<div>",
+        qq("<p><button id='@{heatmap_id}_show_code' class='btn btn-primary'>show/hide code</button></p>"),
+        qq("<div id='@{heatmap_id}_code_wrapper'>"),
+        qq("<pre id='@{heatmap_id}_code'>"),
+        dump_txt,
+        "</pre>",
+        "</div>",
+        "</div>",
+        "<script>",
+        qq("$('#@{heatmap_id}_code_wrapper').hide();"),
+        qq("$('#@{heatmap_id}_show_code').click(function(){ $('#@{heatmap_id}_code_wrapper').toggle(); });"),
+        qq("create_clipboard('@{heatmap_id}_code');"),
+        "</script>",
+        
+        sep = "\n"))
+      
+      
+      
+    }
+  })
 }
 
 default_click_action = function(input, output, session, heatmap_id, selected = NULL, ht_list = NULL, action = "click") {

@@ -4,11 +4,25 @@
 }
 
 #@{heatmap_id}_output_wrapper {
-	background-color: white
+	background-color: white;
+	display: block;
 }
 
 #@{heatmap_id}_output_wrapper@{ifelse(default_output_ui_float, "", "kjsfis")} {
 	border: 1px solid #CCC;
 	padding: 4px 10px;
 	border-radius: 4px;
+}
+
+.output_wrapper_close {
+    float:right;
+    display:inline-block;
+    padding:2px 2px;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+}
+
+.output_wrapper_close:hover {
+    transform: scale(1.2);
+    color:#ccc;
 }

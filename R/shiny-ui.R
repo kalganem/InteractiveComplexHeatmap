@@ -54,7 +54,7 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 	brush_opt = list(stroke = "#f00", opacity = 0.6), 
 	output_ui = default_output_ui(heatmap_id), 
 	output_ui_float = FALSE, containment = FALSE,
-	internal = FALSE,
+	internal = FALSE, 
 	...) {
 
 	if(is.null(heatmap_id)) {
@@ -121,7 +121,7 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 
 	output_ui = HeatmapInfoOutput(heatmap_id, title = title3, width = width3, output_ui = output_ui, output_ui_float = output_ui_float,
 		action = action, response = response, internal = internal)
-
+	
 	has_brush_response = "brush" %in% response
 	only_brush_output_response = !(has_brush_response) & "brush-output" %in% response
 
@@ -729,14 +729,20 @@ HeatmapInfoOutput = function(heatmap_id, title = NULL, width = 400,
 	}
 
 	heatmap_hash = paste0("c", digest(heatmap_id, "crc32"))
-    div(
-		id = qq("@{heatmap_id}_output_wrapper"),
-		add_js_css_dep(heatmap_id, js_file = "ht-output.js", css_file = "ht-output.css"),
-		if(identical(title, NULL) || identical(title, "")) NULL else h5(title),
-		output_ui,
-		style = qq("width: @{width}"),
-		if(output_ui_float) tags$script(HTML(qq("$(document.body).append( $('#@{heatmap_id}_output_wrapper').detach() );"))) else NULL
-	)
+	
+	  div(
+	    id = qq("@{heatmap_id}_output_wrapper"),
+	    add_js_css_dep(heatmap_id, js_file = "ht-output.js", css_file = "ht-output.css"),
+	    if(identical(title, NULL) || identical(title, "")) NULL else h5(title),
+	    span(id = qq("@{heatmap_id}_output_wrapper_close"), 
+	         class = "output_wrapper_close", 
+	         onclick=qq("document.getElementById('@{heatmap_id}_output_wrapper').style.display='none'"), 
+	         "x"),
+	    output_ui,
+	    style = qq("width: @{width}"),
+	    if(output_ui_float) tags$script(HTML(qq("$(document.body).append( $('#@{heatmap_id}_output_wrapper').detach() );"))) else NULL
+	  )
+	
 }
 
 add_js_css_dep = function(heatmap_id, js_file, css_file, envir = parent.frame()) {
