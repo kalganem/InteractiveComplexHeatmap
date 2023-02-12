@@ -35,6 +35,7 @@
 #@{heatmap_id}_sub_heatmap_control .tab-content {
 	padding: 1em 1.4em;
 	border: 1px solid #ddd;
+	border-radius: .375rem;
 }
 
 #@{heatmap_id}_sub_heatmap_control .tabbable {
