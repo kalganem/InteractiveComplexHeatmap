@@ -54,7 +54,7 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 	brush_opt = list(stroke = "#f00", opacity = 0.6), 
 	output_ui = default_output_ui(heatmap_id), 
 	output_ui_float = FALSE, containment = FALSE,
-	internal = FALSE, 
+	internal = FALSE, add_spinner = F,
 	...) {
 
 	if(is.null(heatmap_id)) {
@@ -115,9 +115,9 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 
 
 	main_heatmap_ui = originalHeatmapOutput(heatmap_id, title = title1, width = width1, height = height1, action = action,
-		cursor = cursor, response = response, brush_opt = brush_opt, containment = containment, internal = internal)
+		cursor = cursor, response = response, brush_opt = brush_opt, containment = containment, internal = internal, add_spinner = add_spinner)
 
-	sub_heatmap_ui = subHeatmapOutput(heatmap_id, title = title2, width = width2, height = height2, containment = containment, internal = internal)
+	sub_heatmap_ui = subHeatmapOutput(heatmap_id, title = title2, width = width2, height = height2, containment = containment, internal = internal, add_spinner = add_spinner)
 
 	output_ui = HeatmapInfoOutput(heatmap_id, title = title3, width = width3, output_ui = output_ui, output_ui_float = output_ui_float,
 		action = action, response = response, internal = internal)
@@ -260,7 +260,7 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 	action = "click", cursor = TRUE,
 	response = c(action, "brush"),
 	brush_opt = list(stroke = "#f00", opacity = 0.6),
-	containment = FALSE, internal = FALSE) {
+	containment = FALSE, internal = FALSE, add_spinner = F) {
 
 	if(missing(heatmap_id)) {
 		if(length(shiny_env$heatmap) == 1) {
@@ -426,10 +426,17 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 		if(identical(title, NULL) || identical(title, "")) NULL else h5(title),
 
 		div(id = qq("@{heatmap_id}_heatmap_resize"),
-			plotOutput(qq("@{heatmap_id}_heatmap"), height = height, width = width,
-				        brush = brush,
-				        click = click, dblclick = dblclick, hover = hover
-			),
+		  if(add_spinner) {
+		    shinycssloaders::withSpinner(plotOutput(qq("@{heatmap_id}_heatmap"), height = height, width = width,
+		                                            brush = brush,
+		                                            click = click, dblclick = dblclick, hover = hover
+		    ),type = 8, size = 0.3)
+		  }  else {
+		    plotOutput(qq("@{heatmap_id}_heatmap"), height = height, width = width,
+		               brush = brush,
+		               click = click, dblclick = dblclick, hover = hover
+		    )
+		  },
 			tags$script(HTML(qq("
 				$('#@{heatmap_id}_heatmap').html('<p style=\"position:relative;top:50%;\">Making heatmap, please wait...</p>');
 			")))
@@ -523,7 +530,7 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 # == example
 # # See examples on the help page of originalHeatmapOutput()
 subHeatmapOutput = function(heatmap_id, title = NULL,
-	width = 400, height = 350, containment = FALSE, internal = FALSE) {
+	width = 400, height = 350, containment = FALSE, internal = FALSE, add_spinner = F) {
 
 	if(missing(heatmap_id)) {
 		if(length(shiny_env$heatmap) == 1) {
@@ -557,7 +564,11 @@ subHeatmapOutput = function(heatmap_id, title = NULL,
 		
 		if(identical(title, NULL) || identical(title, "")) NULL else h5(title),
 		div(id = qq("@{heatmap_id}_sub_heatmap_resize"),
-			plotOutput(qq("@{heatmap_id}_sub_heatmap"), height = height, width = width)
+		    if(add_spinner) {
+		      shinycssloaders::withSpinner(plotOutput(qq("@{heatmap_id}_sub_heatmap"), height = height, width = width),type = 8, size = 0.3)
+		    } else {
+		      plotOutput(qq("@{heatmap_id}_sub_heatmap"), height = height, width = width)
+		      }
 		),
 		tags$script(HTML(qq('
 			$("#@{heatmap_id}_sub_heatmap_resize").css("width", $("#@{heatmap_id}_sub_heatmap").width() + 4);
