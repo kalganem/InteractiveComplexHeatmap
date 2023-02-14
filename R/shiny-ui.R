@@ -54,7 +54,7 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 	brush_opt = list(stroke = "#f00", opacity = 0.6), 
 	output_ui = default_output_ui(heatmap_id), 
 	output_ui_float = FALSE, containment = FALSE,
-	internal = FALSE, add_spinner = F,
+	internal = FALSE, add_spinner = F, closable_output = T,
 	...) {
 
 	if(is.null(heatmap_id)) {
@@ -120,7 +120,7 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 	sub_heatmap_ui = subHeatmapOutput(heatmap_id, title = title2, width = width2, height = height2, containment = containment, internal = internal, add_spinner = add_spinner)
 
 	output_ui = HeatmapInfoOutput(heatmap_id, title = title3, width = width3, output_ui = output_ui, output_ui_float = output_ui_float,
-		action = action, response = response, internal = internal)
+		action = action, response = response, internal = internal, closable = closable_output)
 	
 	has_brush_response = "brush" %in% response
 	only_brush_output_response = !(has_brush_response) & "brush-output" %in% response
@@ -675,7 +675,7 @@ default_output_ui = function(heatmap_id) {
 # # See examples on the help page of originalHeatmapOutput()
 HeatmapInfoOutput = function(heatmap_id, title = NULL, width = 400, 
 	output_ui = default_output_ui(heatmap_id), 
-	output_ui_float = FALSE, action = NULL, response = NULL, internal = FALSE) {
+	output_ui_float = FALSE, action = NULL, response = NULL, internal = FALSE, closable = F) {
 
 	if(missing(heatmap_id)) {
 		if(length(shiny_env$heatmap) == 1) {
@@ -698,6 +698,7 @@ HeatmapInfoOutput = function(heatmap_id, title = NULL, width = 400,
 	}
 
 	shiny_env$heatmap[[heatmap_id]]$output_ui_float = output_ui_float
+	shiny_env$heatmap[[heatmap_id]]$closable = closable
 
 	if(is.null(output_ui)) {
 		shiny_env$heatmap[[heatmap_id]]$default_output_ui = FALSE
@@ -745,13 +746,14 @@ HeatmapInfoOutput = function(heatmap_id, title = NULL, width = 400,
 	    id = qq("@{heatmap_id}_output_wrapper"),
 	    add_js_css_dep(heatmap_id, js_file = "ht-output.js", css_file = "ht-output.css"),
 	    if(identical(title, NULL) || identical(title, "")) NULL else h5(title),
-	    span(id = qq("@{heatmap_id}_output_wrapper_close"), 
-	         class = "output_wrapper_close", 
-	         onclick=qq("document.getElementById('@{heatmap_id}_output_wrapper').style.display='none'"), 
-	         "x"),
+	    if(closable) span(id = qq("@{heatmap_id}_output_wrapper_close"), 
+	                      class = "output_wrapper_close", 
+	                      onclick=qq("document.getElementById('@{heatmap_id}_output_wrapper').style.display='none'"), 
+	                      "x"),
 	    output_ui,
 	    style = qq("width: @{width}"),
 	    if(output_ui_float) tags$script(HTML(qq("$(document.body).append( $('#@{heatmap_id}_output_wrapper').detach() );"))) else NULL
+	    
 	  )
 	
 }
