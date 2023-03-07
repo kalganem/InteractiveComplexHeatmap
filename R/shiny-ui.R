@@ -493,14 +493,15 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 							numericInput(qq("@{heatmap_id}_heatmap_download_image_height"), label = "Image height (in px)", value = 0),
 							downloadButton(qq("@{heatmap_id}_heatmap_download_button"), "Save image", class = "btn btn-primary")
 						)
-					)
+					),
+					id = qq("@{heatmap_id}_heatmap_main_tabsets")
 				)
 				if(!has_brush_response & !only_brush_output_response) { # only click
 					tbl = tbl[-(1:2)]
 				} else if(!has_brush_response & only_brush_output_response) { # no brush (subheatmap) output, only brush (text) output + click output
 					tbl = tbl[-1]
 				}
-				do.call(tabsetPanel, tbl)
+				do.call(tabsetPanel,  tbl)
 			},
 			tags$script(HTML(qq("
 				$('#@{heatmap_id}_heatmap_download_image_width').val($('#@{heatmap_id}_heatmap').width());
@@ -577,6 +578,7 @@ subHeatmapOutput = function(heatmap_id, title = NULL,
 		div(id = qq("@{heatmap_id}_sub_heatmap_control"),
 			style = "display:none;",
 			tabsetPanel(
+			  id = qq('@{heatmap_id}_sub_tabs_panels'),
 				tabPanel(HTML("<i class='fa fa-tasks'></i>"),
 					div(id = qq('@{heatmap_id}_sub_tabs-setting'), 
 						div(
