@@ -200,6 +200,7 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 	}
 
 	fluidPage(class = qq("@{heatmap_id}_widget"),
+	          theme = bslib::bs_theme(version = 5, bootswatch = "litera"),
 		tl,
 		tags$style(HTML(layout_css)),
 		...
