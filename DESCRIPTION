@@ -12,8 +12,8 @@ Imports: grDevices, stats, shiny (>= 1.7.4), grid, GetoptLong,
 Suggests: knitr, rmarkdown, testthat, EnrichedHeatmap, GenomicRanges, data.table,
     circlize, GenomicFeatures, tidyverse, tidyHeatmap, cluster,
     org.Hs.eg.db, simplifyEnrichment, GO.db, SC3, GOexpress, SingleCellExperiment,
-    scater, gplots, pheatmap, airway, cola, BiocManager, gridtext,
-    HilbertCurve (>= 1.21.1), SummarizedExperiment, pkgndep, ks
+    scater, gplots, pheatmap, airway, DESeq2, DT, cola, BiocManager, gridtext,
+    HilbertCurve (>= 1.21.1), shinydashboard, SummarizedExperiment, pkgndep, ks
 VignetteBuilder: knitr
 Description: This package can easily make heatmaps which are produced 
     by the ComplexHeatmap package into interactive applications. It provides two types of interactivities: 
