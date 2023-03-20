@@ -625,10 +625,7 @@ subHeatmapOutput = function(heatmap_id, title = NULL,
 									}
 								});
 							")))
-						),
-						hr(),
-						p("Click the button below to turn the sub-heatmap into an interactive app.", style = "max-width:300px;"),
-						actionButton(qq("@{heatmap_id}_open_modal"), label = "Interactivate sub-heatmap", class = "btn btn-primary")
+						)
 					)
 				),
 				tabPanel(HTML("<i class='fa fa-table'></i>"),
