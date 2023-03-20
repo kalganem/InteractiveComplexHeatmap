@@ -198,13 +198,21 @@ InteractiveComplexHeatmapOutput = function(heatmap_id = NULL,
 	} else {
 		stop_wrap("Value of `layout` can only be one of '(1-2)|3', '1-(2|3)', '1-2-3', '1|2|3', '1|(2-3)'.")
 	}
-
-	fluidPage(class = qq("@{heatmap_id}_widget"),
-	          theme = bslib::bs_theme(version = 5, bootswatch = "litera"),
-		tl,
-		tags$style(HTML(layout_css)),
-		...
+	
+	tagList(
+	  div(
+	    class = qq("@{heatmap_id}_widget"),
+	    tl, 
+	  ),
+	  tags$style(HTML(layout_css))
 	)
+
+	# fluidPage(class = qq("@{heatmap_id}_widget"),
+	#           theme = bslib::bs_theme(version = 5, bootswatch = "litera"),
+	# 	tl,
+	# 	tags$style(HTML(layout_css)),
+	# 	...
+	# )
 }
 
 
