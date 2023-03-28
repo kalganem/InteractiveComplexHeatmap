@@ -1715,15 +1715,14 @@ default_click_action = function(input, output, session, heatmap_id, selected = N
 
 				html = qq("
 <div>
-<p>Information of the @{action}ed cell:</p>
+<p>Details:</p>
 <pre>
-heatmap:       @{ht_name}
-heatmap slice: @{slice_name}
-row index:     @{row_index}
-row label:     @{row_label}
-column index:  @{column_index}
-column_label:  @{column_label}
-value:         @{v_chr} <span style='background-color:@{col};width=10px;'>    </span></pre>")
+Target:     @{row_label}
+Sample:  @{column_label}
+Value:         @{v_chr} <span style='background-color:@{col};width=10px;'> </span>
+Gene Name:
+UniprotID:
+</pre>")
 
 				value_txt = NULL
 				if(!is.null(ht@top_annotation)) {
