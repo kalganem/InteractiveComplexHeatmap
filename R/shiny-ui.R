@@ -460,12 +460,12 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 				tbl = list(
 					tabPanel(HTML("<i class='fa fa-search'></i>"),
 						div(id = qq('@{heatmap_id}_tabs-search'), 
-							div(textInput(qq("@{heatmap_id}_keyword"), placeholder = "Multiple keywords separated by ','", label = "Keywords"), style = "width:250px;float:left;"),
-							div(checkboxInput(qq("@{heatmap_id}_search_regexpr"), label = "Regular expression", value = FALSE), style = "width:150px;float:left;padding-top:20px;padding-left:4px;"),
+							div(textInput(qq("@{heatmap_id}_keyword"), placeholder = "Keywords separated by ','", label = "Search:"), style = "width:250px;float:left;"),
+							#div(checkboxInput(qq("@{heatmap_id}_search_regexpr"), label = "Regular expression", value = FALSE), style = "width:150px;float:left;padding-top:20px;padding-left:4px;"),
 							div(style = "clear: both;"),
-							radioButtons(qq("@{heatmap_id}_search_where"), label = "Which dimension to search?", choices = list("on rows" = 1, "on columns" = 2), selected = 1, inline = TRUE),
+							radioButtons(qq("@{heatmap_id}_search_where"), label = "Search by", choices = list("Row" = 1, "Column" = 2), selected = 1, inline = TRUE),
 							checkboxGroupInput(qq("@{heatmap_id}_search_heatmaps"), label = "Which heatmaps to search?", choiceNames = "loading", choiceValues = "", selected = ""),
-							checkboxGroupInput(qq("@{heatmap_id}_search_extend"), label = "Extend sub-heatmap to all heatmaps and annotations?", choiceNames = "yes", choiceValues = 1, selected = NULL),
+							#checkboxGroupInput(qq("@{heatmap_id}_search_extend"), label = "Extend sub-heatmap to all heatmaps and annotations?", choiceNames = "yes", choiceValues = 1, selected = NULL),
 							actionButton(qq("@{heatmap_id}_search_action"), label = "Search", class = "btn btn-primary")
 						),
 						p("Search Heatmap", style = "display:none;")
@@ -497,7 +497,7 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 					tabPanel(HTML("<i class='fa fa-images'></i>"),
 						div(
 							id = qq('@{heatmap_id}_tabs-save-image'),
-							radioButtons(qq("@{heatmap_id}_heatmap_download_format"), label = "Which format?", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE),
+							radioButtons(qq("@{heatmap_id}_heatmap_download_format"), label = "File Format", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE),
 							numericInput(qq("@{heatmap_id}_heatmap_download_image_width"), label = "Image width (in px)", value = 0),
 							numericInput(qq("@{heatmap_id}_heatmap_download_image_height"), label = "Image height (in px)", value = 0),
 							downloadButton(qq("@{heatmap_id}_heatmap_download_button"), "Save image", class = "btn btn-primary")
@@ -630,13 +630,12 @@ subHeatmapOutput = function(heatmap_id, title = NULL,
 				),
 				tabPanel(HTML("<i class='fa fa-table'></i>"),
 					div(id = qq("@{heatmap_id}_sub_tabs-table"),
-						p("Export values in sub-heatmaps as a text table."),
-						actionButton(qq("@{heatmap_id}_open_table"), label = "Open table", class = "btn btn-primary")
+						actionButton(qq("@{heatmap_id}_open_table"), label = "Export Sub-Heatmap Table", class = "btn btn-primary")
 					)
 				),
 				tabPanel(HTML("<i class='fa fa-images'></i>"),
 					div(id = qq('@{heatmap_id}_sub_tabs-save-image'),
-						radioButtons(qq("@{heatmap_id}_sub_heatmap_download_format"), label = "Which format?", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE),
+						radioButtons(qq("@{heatmap_id}_sub_heatmap_download_format"), label = "File Format", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE),
 						numericInput(qq("@{heatmap_id}_sub_heatmap_download_image_width"), label = "Image width (in px)", value = 0),
 						numericInput(qq("@{heatmap_id}_sub_heatmap_download_image_height"), label = "Image height (in px)", value = 0),
 						downloadButton(qq("@{heatmap_id}_sub_heatmap_download_button"), "Save image", class = "btn btn-primary")
