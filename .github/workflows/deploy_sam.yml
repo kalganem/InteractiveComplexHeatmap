@@ -6,7 +6,6 @@ on:
     types: closed
     branches: 'master' # ['master', 'dev']
     paths-ignore:
-      - '**.md'
       - '.gitignore'
 
   workflow_dispatch:
