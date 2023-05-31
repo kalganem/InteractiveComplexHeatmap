@@ -38,11 +38,20 @@ jobs:
             echo "WORKFLOW_FILE=deploy_dev.yml" >> $GITHUB_OUTPUT
           fi
 
+      - name: Determine base ref
+        id: get_base_ref
+        run: |
+          if [ "${{ github.event.pull_request.base.ref }}" == "master" ]; then
+            echo "BASE_REF=main" >> $GITHUB_OUTPUT
+          else
+            echo "BASE_REF=${{ github.event.pull_request.base.ref }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Check details
         run: |
           echo "Deploying SAM"
           echo "============="
-          echo "Base branch: ${{ github.event.pull_request.base.ref }}"
+          echo "Base branch: ${{ steps.get_base_ref.outputs.BASE_REF }}"
           echo "Workflow file: ${{ steps.get_wf_name.outputs.WORKFLOW_FILE }}"
 
       - name: Trigger SAM deployment
@@ -51,6 +60,6 @@ jobs:
           owner: Alamar-Biosciences
           repo: Secondary-Analysis-Module
           github_token: ${{ secrets.UTILITY_ACCESS_TOKEN }}
-          ref: ${{ github.event.pull_request.base.ref }}
+          ref: ${{ steps.get_base_ref.outputs.BASE_REF }}
           workflow_file_name: ${{ steps.get_wf_name.outputs.WORKFLOW_FILE }}
           wait_workflow: false
