@@ -462,21 +462,21 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 						div(id = qq('@{heatmap_id}_tabs-search'), 
               fluidPage(
                 fluidRow(
-                  column(4,
+                  column(6,
       							div(textInput(qq("@{heatmap_id}_keyword"), placeholder = "Keywords separated by ','", label = "Search:"), style = "width:250px;float:left;")
                   ),
-                  column(4,
+                  column(3,
 							#div(checkboxInput(qq("@{heatmap_id}_search_regexpr"), label = "Regular expression", value = FALSE), style = "width:150px;float:left;padding-top:20px;padding-left:4px;"),
       							div(style = "clear: both;"),
 			      				radioButtons(qq("@{heatmap_id}_search_where"), label = "Search by", choices = list("Row" = 1, "Column" = 2), selected = 1, inline = TRUE)
                   ),
-                  column(4,
+                  column(3,
       							checkboxGroupInput(qq("@{heatmap_id}_search_heatmaps"), label = "Which heatmaps to search?", choiceNames = "loading", choiceValues = "", selected = ""),
                   )
-                )
+                ),
+							  actionButton(qq("@{heatmap_id}_search_action"), label = "Search", class = "btn btn-primary")
               ),
 							#checkboxGroupInput(qq("@{heatmap_id}_search_extend"), label = "Extend sub-heatmap to all heatmaps and annotations?", choiceNames = "yes", choiceValues = 1, selected = NULL),
-							actionButton(qq("@{heatmap_id}_search_action"), label = "Search", class = "btn btn-primary")
 						),
 						p("Search Heatmap", style = "display:none;")
 					),
@@ -529,9 +529,9 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
                   column(4,
       							numericInput(qq("@{heatmap_id}_heatmap_download_image_height"), label = "Image height (in px)", value = 0)
                   )
-                )
+                ),
+  							downloadButton(qq("@{heatmap_id}_heatmap_download_button"), "Save image", class = "btn btn-primary")
               ), 
-							downloadButton(qq("@{heatmap_id}_heatmap_download_button"), "Save image", class = "btn btn-primary")
 						)
 					),
 					id = qq("@{heatmap_id}_heatmap_main_tabsets")
