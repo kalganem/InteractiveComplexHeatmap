@@ -3,7 +3,7 @@ $(function() {
 
 	if('@{output_ui_float}' == 'TRUE') {
 		var default_message = "Retrieving from server... Don't move mouse.";
-		$('#@{heatmap_id}_output_wrapper').css({'display': 'block', 'position':'absolute','right':'auto','left':'auto', 'opacity': '0', 'visibility': 'visible'});
+		$('#@{heatmap_id}_output_wrapper').css({'display': 'block', 'position':'absolute','right':'auto','left':'auto', 'opacity': '0', 'visibility': 'hidden'});
 	    if('@{action}' == "hover") {
 	    	var @{heatmap_hash}_absX;
 			var @{heatmap_hash}_absY;
@@ -13,7 +13,7 @@ $(function() {
 		    })
 	    	$('#@{heatmap_id}_heatmap').mousestop(function() {
 	    		if($('#@{heatmap_id}_heatmap_brush').length == 0) {
-		    		$('#@{heatmap_id}_output_wrapper').css({'display': 'block', 'position':'absolute', 'left':@{heatmap_hash}_absX, 'right':'auto', 'top':@{heatmap_hash}_absY});
+		    		$('#@{heatmap_id}_output_wrapper').css({'display': 'block', 'position':'absolute', 'left':@{heatmap_hash}_absX, 'right':'auto', 'top':@{heatmap_hash}_absY, 'opacity': '1', 'visibility': 'visible'});
 		    	}
 		    });
 		}
