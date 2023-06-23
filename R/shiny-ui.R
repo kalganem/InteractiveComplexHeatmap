@@ -460,20 +460,33 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 				tbl = list(
 					tabPanel(HTML("<i class='fa fa-search'></i>"),
 						div(id = qq('@{heatmap_id}_tabs-search'), 
-							div(textInput(qq("@{heatmap_id}_keyword"), placeholder = "Keywords separated by ','", label = "Search:"), style = "width:250px;float:left;"),
+              fluidPage(
+                fluidRow(
+                  column(6,
+      							div(textInput(qq("@{heatmap_id}_keyword"), placeholder = "Keywords separated by ','", label = "Search:"), style = "width:250px;float:left;")
+                  ),
+                  column(3,
 							#div(checkboxInput(qq("@{heatmap_id}_search_regexpr"), label = "Regular expression", value = FALSE), style = "width:150px;float:left;padding-top:20px;padding-left:4px;"),
-							div(style = "clear: both;"),
-							radioButtons(qq("@{heatmap_id}_search_where"), label = "Search by", choices = list("Row" = 1, "Column" = 2), selected = 1, inline = TRUE),
-							checkboxGroupInput(qq("@{heatmap_id}_search_heatmaps"), label = "Which heatmaps to search?", choiceNames = "loading", choiceValues = "", selected = ""),
+      							div(style = "clear: both;"),
+			      				radioButtons(qq("@{heatmap_id}_search_where"), label = "Search by", choices = list("Row" = 1, "Column" = 2), selected = 1, inline = TRUE)
+                  ),
+                  column(3,
+      							checkboxGroupInput(qq("@{heatmap_id}_search_heatmaps"), label = "Which heatmaps to search?", choiceNames = "loading", choiceValues = "", selected = ""),
+                  )
+                ),
+							  actionButton(qq("@{heatmap_id}_search_action"), label = "Search", class = "btn btn-primary")
+              ),
 							#checkboxGroupInput(qq("@{heatmap_id}_search_extend"), label = "Extend sub-heatmap to all heatmaps and annotations?", choiceNames = "yes", choiceValues = 1, selected = NULL),
-							actionButton(qq("@{heatmap_id}_search_action"), label = "Search", class = "btn btn-primary")
 						),
 						p("Search Heatmap", style = "display:none;")
 					),
 					tabPanel(HTML("<i class='fa fa-brush'></i>"),
-					         div(
-					           id = qq('@{heatmap_id}_tabs-brush'),
-					           HTML(qq('
+					        div(
+					          id = qq('@{heatmap_id}_tabs-brush'),
+                    fluidPage(
+                      fluidRow(
+                        column(4,
+    				              HTML(qq('
 								<div class="form-group shiny-input-container" style="float:left; width:120px;">
 								<label>Brush border</label>
 								<div id="@{heatmap_id}_color_pickers_border"></div>
@@ -483,24 +496,42 @@ originalHeatmapOutput = function(heatmap_id, title = NULL,
 								<div id="@{heatmap_id}_color_pickers_fill"></div>
 								</div>
 								<div style="clear:both;"></div>')
-					           ),
-					           selectizeInput(qq("@{heatmap_id}_color_pickers_border_width"), label = "Border width", 
+		  			              ),
+                        ),
+                        column(4,
+			 		                selectizeInput(qq("@{heatmap_id}_color_pickers_border_width"), label = "Border width", 
 					                          choices = list("1px" = 1, "2px" = 2, "3px" = 3), selected = 1,
 					                          options = list(render = I("{
 										option: function(item, escape) {
 											return '<div><hr style=\"border-top:' + item.value + 'px solid black;\"></div>'
 										}
-									}"))),
-					           sliderInput(qq("@{heatmap_id}_color_pickers_opacity"), label = "Opacity", min = 0, max = 1, value = pickr_opacity)
-					         )
+                      
+									}")))
+                        ),
+					              column(4,
+                          sliderInput(qq("@{heatmap_id}_color_pickers_opacity"), label = "Opacity", min = 0, max = 1, value = pickr_opacity)
+                        )
+                      )
+                    )
+					        )
 					),
 					tabPanel(HTML("<i class='fa fa-images'></i>"),
 						div(
 							id = qq('@{heatmap_id}_tabs-save-image'),
-							radioButtons(qq("@{heatmap_id}_heatmap_download_format"), label = "File Format", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE),
-							numericInput(qq("@{heatmap_id}_heatmap_download_image_width"), label = "Image width (in px)", value = 0),
-							numericInput(qq("@{heatmap_id}_heatmap_download_image_height"), label = "Image height (in px)", value = 0),
-							downloadButton(qq("@{heatmap_id}_heatmap_download_button"), "Save image", class = "btn btn-primary")
+              fluidPage(
+                fluidRow(
+                  column(4,
+      							radioButtons(qq("@{heatmap_id}_heatmap_download_format"), label = "File Format", choices = list("png" = 1, "pdf" = 2, "svg" = 3), selected = 1, inline = TRUE)
+                  ),
+                  column(4,
+      							numericInput(qq("@{heatmap_id}_heatmap_download_image_width"), label = "Image width (in px)", value = 0)
+                  ),
+                  column(4,
+      							numericInput(qq("@{heatmap_id}_heatmap_download_image_height"), label = "Image height (in px)", value = 0)
+                  )
+                ),
+  							downloadButton(qq("@{heatmap_id}_heatmap_download_button"), "Save image", class = "btn btn-primary")
+              ), 
 						)
 					),
 					id = qq("@{heatmap_id}_heatmap_main_tabsets")
