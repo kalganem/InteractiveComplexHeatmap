@@ -1,0 +1,65 @@
+name: Deploy SAM
+
+on:
+
+  pull_request:
+    types: closed
+    branches: 'master' # ['master', 'dev']
+    paths-ignore:
+      - '.gitignore'
+
+  workflow_dispatch:
+
+  workflow_call:
+
+jobs:
+
+  deploy-sam:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      # # Checkpoint: Throw an error if PR to master is originating from a branch other than dev
+      # - name: Test the head ref
+      #   run: |
+      #     if [ "${{ github.event.pull_request.base.ref }}" == "master" ]; then
+      #       if [ "${{ github.event.pull_request.head.ref }}" != "dev" ]; then
+      #         echo "Error: Only 'dev' can make a direct PR to 'master'."
+      #         exit 1
+      #       fi
+      #     fi
+
+      - name: Determine ref and workflow file
+        id: get_wf_name
+        run: |
+          if [ "${{ github.event.pull_request.base.ref }}" == "master" ]; then
+            echo "WORKFLOW_FILE=deploy_prod.yml" >> $GITHUB_OUTPUT
+          else
+            echo "WORKFLOW_FILE=deploy_dev.yml" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Determine base ref
+        id: get_base_ref
+        run: |
+          if [ "${{ github.event.pull_request.base.ref }}" == "master" ]; then
+            echo "BASE_REF=main" >> $GITHUB_OUTPUT
+          else
+            echo "BASE_REF=${{ github.event.pull_request.base.ref }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check details
+        run: |
+          echo "Deploying SAM"
+          echo "============="
+          echo "Base branch: ${{ steps.get_base_ref.outputs.BASE_REF }}"
+          echo "Workflow file: ${{ steps.get_wf_name.outputs.WORKFLOW_FILE }}"
+
+      - name: Trigger SAM deployment
+        uses: convictional/trigger-workflow-and-wait@v1.6.5
+        with:
+          owner: Alamar-Biosciences
+          repo: Secondary-Analysis-Module
+          github_token: ${{ secrets.UTILITY_ACCESS_TOKEN }}
+          ref: ${{ steps.get_base_ref.outputs.BASE_REF }}
+          workflow_file_name: ${{ steps.get_wf_name.outputs.WORKFLOW_FILE }}
+          wait_workflow: false

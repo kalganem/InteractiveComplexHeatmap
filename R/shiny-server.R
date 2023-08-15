@@ -284,7 +284,7 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 			if(is.null(lt)) {
 				session$sendCustomMessage(qq("@{heatmap_id}_empty_search"), "")
 			} else {
-				updateRadioButtons(session, qq("@{heatmap_id}_search_where"), label = "Which dimension to search?", choices = lt[[1]], selected = lt[[1]][[1]], inline = TRUE)
+				updateRadioButtons(session, qq("@{heatmap_id}_search_where"), label = "Search by", choices = lt[[1]], selected = lt[[1]][[1]], inline = TRUE)
 				updateCheckboxGroupInput(session, qq("@{heatmap_id}_search_heatmaps"), label = "Which heatmaps to search?", choiceNames = lt[[2]], choiceValues = lt[[2]], selected = lt[[2]])
 			}
 			session$sendCustomMessage(qq("@{heatmap_id}_initialized"), "")
@@ -623,9 +623,9 @@ makeInteractiveComplexHeatmap = function(input, output, session, ht_list,
 			keywords2 = keywords = input[[qq("@{heatmap_id}_keyword")]]
 
 			where = input[[qq("@{heatmap_id}_search_where")]]
-			is_regexpr = input[[qq("@{heatmap_id}_search_regexpr")]]
+			is_regexpr = FALSE #input[[qq("@{heatmap_id}_search_regexpr")]]
 			sht = input[[qq("@{heatmap_id}_search_heatmaps")]]
-			extend = input[[qq("@{heatmap_id}_search_extend")]]
+			extend = TRUE #input[[qq("@{heatmap_id}_search_extend")]]
 
 			if(length(sht) == 0) {
 				output[[qq("@{heatmap_id}_sub_heatmap")]] = renderPlot({
@@ -1715,15 +1715,14 @@ default_click_action = function(input, output, session, heatmap_id, selected = N
 
 				html = qq("
 <div>
-<p>Information of the @{action}ed cell:</p>
+<p>Details:</p>
 <pre>
-heatmap:       @{ht_name}
-heatmap slice: @{slice_name}
-row index:     @{row_index}
-row label:     @{row_label}
-column index:  @{column_index}
-column_label:  @{column_label}
-value:         @{v_chr} <span style='background-color:@{col};width=10px;'>    </span></pre>")
+Target:     @{row_label}
+Sample:  @{column_label}
+Value:         @{v_chr} <span style='background-color:@{col};width=10px;'> </span>
+Gene Name:
+UniprotID:
+</pre>")
 
 				value_txt = NULL
 				if(!is.null(ht@top_annotation)) {
@@ -1822,14 +1821,14 @@ check_heatmap_in_search = function(heatmap_id, ht_list) {
 
 		if(any(has_row_labels) && any(has_column_labels)) {
 			if(length(all_ht_name) == 1 && has_row_labels[1] && has_column_labels[1]) {
-				where_choices = list("on rows" = 1, "on columns" = 2, "both" = 3)
+				where_choices = list("Row" = 1, "Column" = 2, "Row & Column" = 3)
 			} else {
-				where_choices = list("on rows" = 1, "on columns" = 2)
+				where_choices = list("Row" = 1, "Column" = 2)
 			}
 		} else if(!any(has_row_labels)) {
-			where_choices = list("on columns" = 2)
+			where_choices = list("Column" = 2)
 		} else if(!any(has_column_labels)) {
-			where_choices = list("on rows" = 1)
+			where_choices = list("Row" = 1)
 		}
 
 		heatmaps_to_search = all_ht_name[has_row_labels | has_column_labels]
